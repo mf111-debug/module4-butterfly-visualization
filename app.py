@@ -1,41 +1,40 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
 
-st.title("Change in Butterfly Abundance (2000–2020)")
-st.markdown("Each dot represents one species.")
+st.set_page_config(layout="wide")
+
+st.title("Change in butterfly abundance, 2000–20")
+st.markdown("Each dot represents one species. Data for the contiguous U.S.")
 
 np.random.seed(42)
 
-negative = np.random.normal(-40, 20, 300)
-positive = np.random.normal(30, 15, 80)
-extreme = np.random.normal(120, 10, 15)
+negative = np.random.normal(-45, 18, 300)
+positive = np.random.normal(30, 12, 80)
+extreme = np.random.normal(115, 10, 15)
 
 percent_change = np.concatenate([negative, positive, extreme])
 
-df = pd.DataFrame({
-    "species": range(len(percent_change)),
-    "percent_change": percent_change
-})
+df = pd.DataFrame({"percent_change": percent_change})
+df["y"] = np.random.uniform(-0.08, 0.08, len(df))
 
-df["category"] = np.where(df["percent_change"] < 0, "Decline", "Increase")
+fig = go.Figure()
 
-fig = px.strip(
-    df,
-    x="percent_change",
-    color="category",
-    color_discrete_map={
-        "Decline": "#E76F51",
-        "Increase": "#2A9D8F"
-    }
-)
+fig.add_trace(go.Scatter(
+    x=df["percent_change"],
+    y=df["y"],
+    mode="markers",
+    marker=dict(
+        color=np.where(df["percent_change"] < 0, "#D95F02", "#1B9E77"),
+        size=6,
+        opacity=0.85
+    ),
+    hovertemplate="Percent change: %{x:.1f}%<extra></extra>"
+))
+
+fig.add_vline(x=0, line_width=1, line_color="black")
 
 fig.update_layout(
-    xaxis_title="Percent Change",
-    yaxis_visible=False,
-    template="simple_white"
-)
-
-st.plotly_chart(fig, width="stretch")
-
+    plot_bgcolor="white",
+    paper_bgcolor_
