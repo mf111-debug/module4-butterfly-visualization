@@ -37,4 +37,13 @@ fig.add_vline(x=0, line_width=1, line_color="black")
 
 fig.update_layout(
     plot_bgcolor="white",
-    paper_bgcolor_
+    paper_bgcolor="white",
+    xaxis_title="Percent change",
+    yaxis_visible=False,
+    showlegend=False,
+    margin=dict(l=40, r=40, t=40, b=40)
+)
+
+fig.update_xaxes(showgrid=False)
+
+st.plotly_chart(fig, width="stretch")
